@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <style>
+        .container-opt {
+            text-align: center;
+        }
+
+        .container-gb {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-opt" id="container-opt">
+        <br>
+        <div>
+            <input type="text" id="opt-field" name="message">
+        </div>
+        <br><br>
+        <div>
+            <div id="opt-list"></div>
+        </div>
+        <br>
+        <button id="start" onclick=start()>Start</button>
+        <br>
+    </div>
+    <div class="container-gb" id="container-gb">
+        <div id="gameBoard">
+
+        </div>
+    </div>
+
+    <script>
+        let id;
+        let options = [];
+        let currentQuiz;
+
+        showOptions();
+
+        var optField = document.getElementById("opt-field");
+        optField.addEventListener("keydown", function (event) {
+            if (event.keyCode == 13) {
+                options.push(optField.value);
+                showOptions()
+            }
+        });
+
+
+        function removeOption(index) {
+            options.splice(index, 1);
+            showOptions();
+        }
+
+        function showOptions() {
+            let optlist = document.getElementById('opt-list');
+            optlist.innerHTML = '';
+            if (options.length === 0) {
+                optlist.innerHTML = ("Nessun opzione presente.");
+            } else {
+                for (let i = 0; i < options.length; i++) {
+                    let option = options[i];
+                    let optElement = document.createElement('div');
+                    optElement.innerHTML =
+                        `${option}
+                        <button onclick=removeOption(${i})>X</button>
+                        <br>`;
+                    optlist.appendChild(optElement);
+                }
+            }
+        }
+
+        async function start() {
+            let containerOpt = document.getElementById("container-opt");
+            let containerGB = document.getElementById("container-gb");
+            containerOpt.style.display = 'none';
+            containerGB.style.display = 'block';
+
+
+            // qua impostiamo invisibile il div container-opt e rendiamo visible il div container-gb
+            //fetchiamo il primo quiz chiamando il metodo getQuiz() 
+
+            getQuiz()
+        }
+
+        function buildPrompt() {
+            return options.join(' or ');
+        }
+
+        async function getQuiz() {
+
+            let buildingPrompt = buildPrompt();
+
+            let prompt = `Write just one quiz about ${buildingPrompt} with only 1 correct option and use this format: Question?;option 1;option 2;option 3;option 4;position of the correct option as a number`
+            console.log(prompt)
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer gAAAAABmYcL0prqwHw6VT3TlQmHWEoKzMh-FWUZatEfhmUKAeFdwI7UId4nBRVNCk_1aP-8NgjK4Y2F78dolTRZBEeydTVm2C3aQv2B19KWMgll_4nE0NB-hZaZGBuBdyOcTT7d69WIL'
+                },
+                body: `{"max_tokens":2048,"mode":"python","model":"icortex-1","n":1,"temperature":null,"text":"${prompt}"}`
+            };
+
+            await fetch('https://api.textcortex.com/v1/codes', options)
+                .then(response => {
+                    console.log(response)
+                    return response.json()
+                })
+                .then(response => {
+                    console.log(response)
+                    console.log(response.data.outputs[0].text)
+                    currentQuiz = response.data.outputs[0].text;
+                })
+                .catch(err => console.error(err));
+
+            currentQuiz = currentQuiz.toString()
+            cQ = currentQuiz.split(';');
+
+            if (cQ.length !== 6) {
+                getQuiz();
+                return;
+            }
+
+            let gb = document.getElementById("gameBoard");
+            gb.style.pointerEvents = 'auto';
+            gb.innerHTML = '';
+            let createGameBoard = document.createElement('div');
+            createGameBoard.innerHTML = `
+                <h3>${cQ[0]}</h3>
+                <button id="opt1" onclick="checkWin(1)">${cQ[1]}</button>
+                <button id="opt2" onclick="checkWin(2)">${cQ[2]}</button>
+                <button id="opt3" onclick="checkWin(3)">${cQ[3]}</button>
+                <button id="opt4" onclick="checkWin(4)">${cQ[4]}</button>
+                <br><br>
+                <button id="nextQuiz" onclick="getQuiz()">Next quiz</button>
+            `
+            gb.appendChild(createGameBoard)
+        }
+
+        function checkWin(index) {
+            if (cQ[5].length > 1) {
+                getQuiz();
+                return;
+            }
+            if (parseInt(cQ[5]) === index) {
+                let cAnswer = document.getElementById(`opt${index}`)
+                cAnswer.style.backgroundColor = "Green";
+                console.log("sei forte")
+            } else {
+                let cAnswer = document.getElementById(`opt${index}`)
+                cAnswer.style.backgroundColor = "Red";
+                console.log("sei scarso")
+            }
+            let gb = document.getElementById('gameBoard')
+            gb.style.pointerEvents = 'none';
+            let nextBtn = document.getElementById('nextQuiz')
+            nextBtn.style.pointerEvents = 'auto'
+
+        }
+
+    </script>
+</body>
+
+</html>

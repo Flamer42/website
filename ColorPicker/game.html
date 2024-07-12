@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Color Picker</title>
+</head>
+
+<body>
+    <style>
+        .container {
+            text-align: center;
+        }
+
+        .dot {
+            height: 100px;
+            width: 100px;
+            background-color: #bbb;
+            border-radius: 100%;
+            display: inline-block;
+        }
+    </style>
+    <div class="container">
+        <form>
+            <input type="range" id="red" name="red" min="0" max="255" onchange="colorPicker()" />
+            <label for="volume">Red</label>
+            <br>
+            <input type="range" id="green" name="green" min="0" max="255" onchange="colorPicker()" />
+            <label for="volume">Green</label>
+            <br>
+            <input type="range" id="blue" name="blue" min="0" max="255" onchange="colorPicker()" />
+            <label for="volume">Blue </label>
+        </form>
+        <br>
+        <br>
+        <div id="dot">
+
+        </div>
+    </div>
+</body>
+<script>
+    async function colorPicker() {
+        let divColor = document.getElementById('dot');
+        divColor.innerHTML = '';
+
+        let red = document.getElementById('red').value;
+        let green = document.getElementById('green').value;
+        let blue = document.getElementById('blue').value;
+
+        red = parseInt(red).toString(16);
+        green = parseInt(green).toString(16);
+        blue = parseInt(blue).toString(16);
+
+        if (red.length < 2) {
+            red = "0" + red;
+        }
+        if (green.length < 2) {
+            green = "0" + green;
+        }
+        if (blue.length < 2) {
+            blue = "0" + blue;
+        }
+        
+        color = red + green + blue;
+
+        let nameColor;
+        await fetch(`https://www.thecolorapi.com/id?hex=${color}&format=json`, {
+            method: 'GET',
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            nameColor = data.name.value;
+        })
+        let colorScelto = document.createElement('div');
+        colorScelto.innerHTML = `<div id="output" class="dot" style="height: 100px; background-color:#${color};"></div>` + `<br><label for="output">${nameColor} | #${color}</label>`;
+        divColor.appendChild(colorScelto);
+    }
+</script>
+
+</html>

@@ -1,0 +1,43 @@
+<style>
+    .container {
+        text-align: center;
+    }
+
+    .container-selection {
+        text-align: flex;
+    }
+</style>
+
+<html>
+
+<head>
+    <title>
+        Portfolio Cris
+    </title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Portfolio Cris</h1>
+        <div id="selection" class="container-selection">
+            <button onclick="ColorPicker()">Color Picker</button>
+            <button onclick="QuizGame()">Quiz Game</button>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function ColorPicker() {
+        var loc = window.location.pathname;
+        let dir = loc.substring(0, loc.lastIndexOf('/')) + "/ColorPicker/game.html";
+        window.location.replace(dir);
+    }
+
+    function QuizGame() {
+        var loc = window.location.pathname;
+        let dir = loc.substring(0, loc.lastIndexOf('/')) + "/QuizGame/game.html";
+        window.location.replace(dir);
+    }
+</script>
