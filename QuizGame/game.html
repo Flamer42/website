@@ -108,6 +108,7 @@
         </div>
         <br>
         <button id="start" onclick=start()>Start</button>
+        <button id="back" onclick="back()">Back</button>
         <br>
     </div>
     <div class="container-gb" id="container-gb">
@@ -221,7 +222,7 @@
                 <br><br>
                 <div>
                     <button id="nextQuiz" onclick="getQuiz()">Next quiz</button>
-                    <button id="back" onclick="back()">Back</button>
+                    <button id="backBtn" onclick="back()">Back</button>
                 </div>
             `
             gb.appendChild(createGameBoard)
@@ -245,7 +246,7 @@
             gb.style.pointerEvents = 'none';
             let nextBtn = document.getElementById('nextQuiz')
             nextBtn.style.pointerEvents = 'auto'
-            let backBtn = document.getElementById('back')
+            let backBtn = document.getElementById('backBtn')
             backBtn.style.pointerEvents = 'auto'
 
         }
