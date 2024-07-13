@@ -6,12 +6,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz</title>
     <style>
-        .container-opt {
-            text-align: center;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
         }
 
-        .container-gb {
+        .container-opt {
             text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            margin: 10px;
+        }
+        .container-gb {
+            display: none;
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            margin: 10px;
+        }
+
+        .container-btns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: calc(100% - 22px);
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            max-width: 200px;
+            margin: 10px auto;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #gameBoard button {
+            margin: 5px 0;
+        }
+
+        @media (max-width: 600px) {
+            .container-opt, .container-gb {
+                padding: 15px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+
+            input[type="text"] {
+                padding: 8px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -37,7 +117,7 @@
     </div>
 
     <script>
-        let id;
+
         let options = [];
         let currentQuiz;
 
@@ -139,7 +219,10 @@
                 <button id="opt3" onclick="checkWin(3)">${cQ[3]}</button>
                 <button id="opt4" onclick="checkWin(4)">${cQ[4]}</button>
                 <br><br>
-                <button id="nextQuiz" onclick="getQuiz()">Next quiz</button>
+                <div>
+                    <button id="nextQuiz" onclick="getQuiz()">Next quiz</button>
+                    <button onclick="back()">Back</button>
+                </div>
             `
             gb.appendChild(createGameBoard)
         }
@@ -165,6 +248,12 @@
 
         }
 
+        function back() {
+            var loc = window.location.pathname;
+            newloc = loc.substring(0, loc.lastIndexOf('/'))
+            let dir = newloc.substring(0, newloc.lastIndexOf('/')) + "/hub.html";
+            window.location.replace(dir);
+        }
     </script>
 </body>
 
