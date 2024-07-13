@@ -139,6 +139,10 @@
         
         color = red + green + blue;
 
+        let cerchioColoreScelto = document.createElement('div');
+        cerchioColoreScelto.innerHTML = `<div id="output" class="dot" style="height: 100px; background-color:#${color};"></div>`
+        divColor.appendChild(cerchioColoreScelto);
+
         let nameColor;
         await fetch(`https://www.thecolorapi.com/id?hex=${color}&format=json`, {
             method: 'GET',
@@ -147,9 +151,10 @@
         }).then(data => {
             nameColor = data.name.value;
         })
-        let colorScelto = document.createElement('div');
-        colorScelto.innerHTML = `<div id="output" class="dot" style="height: 100px; background-color:#${color};"></div>` + `<br><label for="output">${nameColor} | #${color}</label><br>`;
-        divColor.appendChild(colorScelto);
+
+        let nomeColoreScelto = document.createElement('div')
+        nomeColoreScelto.innerHTML = `<br><label for="output">${nameColor} | #${color}</label><br>`;
+        divColor.appendChild(nomeColoreScelto);
     }
 </script>
 
