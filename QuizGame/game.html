@@ -100,6 +100,8 @@
     <div class="container-opt" id="container-opt">
         <br>
         <div>
+            <label for="API_KEY">Key</labeL>
+            <input type="text" id="API_KEY">
             <input type="text" id="opt-field" name="message">
         </div>
         <br><br>
@@ -118,7 +120,7 @@
     </div>
 
     <script>
-
+        let key;
         let options = [];
         let currentQuiz;
 
@@ -166,6 +168,8 @@
             // qua impostiamo invisibile il div container-opt e rendiamo visible il div container-gb
             //fetchiamo il primo quiz chiamando il metodo getQuiz() 
 
+            key = document.getElementById('API_KEY').value;
+
             getQuiz()
         }
 
@@ -184,7 +188,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer gAAAAABmYcL0prqwHw6VT3TlQmHWEoKzMh-FWUZatEfhmUKAeFdwI7UId4nBRVNCk_1aP-8NgjK4Y2F78dolTRZBEeydTVm2C3aQv2B19KWMgll_4nE0NB-hZaZGBuBdyOcTT7d69WIL'
+                    Authorization: `${key}`
                 },
                 body: `{"max_tokens":2048,"mode":"python","model":"icortex-1","n":1,"temperature":null,"text":"${prompt}"}`
             };
@@ -199,7 +203,7 @@
                     console.log(response.data.outputs[0].text)
                     currentQuiz = response.data.outputs[0].text;
                 })
-                .catch(err => console.error(err));
+                .catch(err => back());
 
             currentQuiz = currentQuiz.toString()
             cQ = currentQuiz.split(';');
