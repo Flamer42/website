@@ -91,70 +91,54 @@
     <div class="container">
         <form>
             <input type="range" id="red" name="red" min="0" max="255" onchange="colorPicker()" />
-            <label for="volume">Red</label>
-            <br>
+            <label for="red">Red</label>
             <input type="range" id="green" name="green" min="0" max="255" onchange="colorPicker()" />
-            <label for="volume">Green</label>
-            <br>
+            <label for="green">Green</label>
             <input type="range" id="blue" name="blue" min="0" max="255" onchange="colorPicker()" />
-            <label for="volume">Blue </label>
+            <label for="blue">Blue</label>
         </form>
         <br>
+        <div id="dot" class="dot"></div>
         <br>
-        <div id="dot">
-
-        </div>
+        <label id="colorName">#bbbbbb</label>
         <br>
         <button onclick="back()">Back</button>
     </div>
 </body>
+
 <script>
     function back() {
-        var loc = window.location.pathname;
-        newloc = loc.substring(0, loc.lastIndexOf('/'))
+        let loc = window.location.pathname;
+        let newloc = loc.substring(0, loc.lastIndexOf('/'))
         let dir = newloc.substring(0, newloc.lastIndexOf('/')) + "/hub.html";
         window.location.replace(dir);
     }
+
     async function colorPicker() {
-        let divColor = document.getElementById('dot');
-        divColor.innerHTML = '';
+        let red = parseInt(document.getElementById('red').value);
+        let green = parseInt(document.getElementById('green').value);
+        let blue = parseInt(document.getElementById('blue').value);
 
-        let red = document.getElementById('red').value;
-        let green = document.getElementById('green').value;
-        let blue = document.getElementById('blue').value;
+        let redHex = red.toString(16).padStart(2, "0");
+        let greenHex = green.toString(16).padStart(2, "0");
+        let blueHex = blue.toString(16).padStart(2, "0");
+        let color = redHex + greenHex + blueHex;
 
-        red = parseInt(red).toString(16);
-        green = parseInt(green).toString(16);
-        blue = parseInt(blue).toString(16);
+        const colorNameLabel = document.getElementById('colorName');
 
-        if (red.length < 2) {
-            red = "0" + red;
-        }
-        if (green.length < 2) {
-            green = "0" + green;
-        }
-        if (blue.length < 2) {
-            blue = "0" + blue;
-        }
-        
-        color = red + green + blue;
-
-        let cerchioColoreScelto = document.createElement('div');
-        cerchioColoreScelto.innerHTML = `<div id="output" class="dot" style="height: 100px; background-color:#${color};"></div>`
-        divColor.appendChild(cerchioColoreScelto);
-
-        let nameColor;
-        await fetch(`https://www.thecolorapi.com/id?hex=${color}&format=json`, {
-            method: 'GET',
-        }).then(response => {
-            return response.json();
-        }).then(data => {
+        let nameColor = '';
+        try {
+            const response = await fetch(`https://www.thecolorapi.com/id?hex=${color}&format=json`);
+            const data = await response.json();
             nameColor = data.name.value;
-        })
+        } catch (error) {
+            console.error("Errore fetching color:", error);
+            nameColor = "Unknown";
+        }
 
-        let nomeColoreScelto = document.createElement('div')
-        nomeColoreScelto.innerHTML = `<br><label for="output">${nameColor} | #${color}</label><br>`;
-        divColor.appendChild(nomeColoreScelto);
+        const dot = document.getElementById('dot');
+        dot.style.backgroundColor = `#${color}`;
+        colorNameLabel.textContent = `${nameColor} | #${color}`;
     }
 </script>
 
