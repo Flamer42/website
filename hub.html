@@ -76,8 +76,9 @@
     <div class="container">
         <h1>Portfolio Cris</h1>
         <div id="selection" class="container-selection">
-            <button onclick="ColorPicker()">Color Picker</button>
-            <button onclick="QuizGame()">Quiz Game</button>
+            <button onclick="colorPicker()">Color Picker</button>
+            <button onclick="quizGame()">Quiz Game</button>
+            <button onclick="lunarCompass()">Lunar Compass</button>
         </div>
     </div>
 </body>
@@ -85,15 +86,21 @@
 </html>
 
 <script>
-    function ColorPicker() {
+    function colorPicker() {
         var loc = window.location.pathname;
         let dir = loc.substring(0, loc.lastIndexOf('/')) + "/ColorPicker/game.html";
         window.location.replace(dir);
     }
 
-    function QuizGame() {
+    function quizGame() {
         var loc = window.location.pathname;
         let dir = loc.substring(0, loc.lastIndexOf('/')) + "/QuizGame/game.html";
         window.location.replace(dir);
     }
+    function lunarCompass() {
+        var loc = window.location.pathname;
+        let dir = loc.substring(0, loc.lastIndexOf('/')) + "/lunarCompass/lunarCompass.html";
+        window.location.replace(dir);
+    }
+
 </script>
