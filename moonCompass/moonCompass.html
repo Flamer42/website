@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Direzione della Luna</title>
+  <script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: #0b0e1a;
+      color: #f0f0f0;
+    }
+    h1 { color: #ffd700; }
+    .card {
+      background: #1a1f36;
+      padding: 1.5rem;
+      border-radius: 15px;
+      display: inline-block;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+  </style>
+</head>
+<body>
+  <h1>Direzione della Luna 🌙</h1>
+  <div class="card">
+    <p id="status">Recupero posizione...</p>
+    <p id="result"></p>
+  </div>
+
+  <script>
+  function gradi(radianti) {
+    return (radianti * 180 / Math.PI).toFixed(2);
+  }
+
+  function direzione(azimut) {
+    const dirs = ["Nord", "Nord-Est", "Est", "Sud-Est", "Sud", "Sud-Ovest", "Ovest", "Nord-Ovest"];
+    const idx = Math.round(((azimut % 360) / 45)) % 8;
+    return dirs[idx];
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      document.getElementById("status").textContent = 
+        `Coordinate: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+
+      const date = new Date();
+      const moonPos = SunCalc.getMoonPosition(date, lat, lon);
+
+      const alt = gradi(moonPos.altitude);
+      const az = (moonPos.azimuth * 180 / Math.PI + 180).toFixed(2);
+
+      document.getElementById("result").innerHTML = `
+        Altezza: ${alt}°<br>
+        Azimut: ${az}° (${direzione(az)})
+      `;
+    }, err => {
+      document.getElementById("status").textContent =
+        `Errore (${err.code}): ${err.message}`;
+    });
+  } else {
+    document.getElementById("status").textContent = "Geolocalizzazione non supportata dal browser.";
+  }
+</script>
+
+</body>
+</html>
